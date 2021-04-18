@@ -1,25 +1,52 @@
-#' Title
+#' Graphical check for proportional odds assumption
 #'
-#' @param dat data frame containing the variables in the formula
-#' @param f an object of class formula
+#' @param x an object
+#' @param ... additional arguments
 #'
 #' @return None
-#' @export
 #'
 #' @importFrom rlang .data
 #'
+#' @export
 #' @examples
-#' pomcheck(iris, Species ~ Sepal.Length)
-pomcheck <- function(dat, f)
+#' pomcheck(Species ~ Sepal.Length, iris)
+#' pomcheck(x="Species", y="Sepal.Length", iris)
+pomcheck <- function(x,...) UseMethod("pomcheck")
+
+#' @param formula A formula of the form y ~ x1 + x2 + ...
+#'
+#' @param dat data frame containing the variables in the formula
+#'
+#' @export
+pomcheck.formula <- function(formula, dat)
 {
+  #assertthat::assert_that(rlang::is_formula(x))
+  t <- all.vars(formula)
+  x <- t[1]
+  y <- t[-1]
+  pomcheck.default(x, y, dat)
+}
+
+#' @param lhs character string for response
+#'
+#' @param rhs character string for explanatory variables
+#' @param dat data frame containing the variables lhs and rhs
+#'
+#' @export
+pomcheck.default  <- function(x, y, dat)
+{
+  lhs <- x
+  rhs <- y
   assertthat::assert_that(is.data.frame(dat))
-  assertthat::assert_that(rlang::is_formula(f))
-  t <- all.vars(f)
-  lhs <- t[1]
-  rhs <- t[-1]
-  # Check t[1] is a factor
+  assertthat::assert_that(is.character(lhs))
+  assertthat::assert_that(is.character(rhs))
+  # assertthat::assert_that(rlang::is_formula(f))
+  # t <- all.vars(f)
+  # lhs <- t[1]
+  # rhs <- t[-1]
+  # Check lhs is a factor
   assertthat::assert_that(with(dat, is.factor(get(lhs))))
-  # Check t[1] has at least 3 levels
+  # Check lhs has at least 3 levels
   assertthat::assert_that(with(dat, length(levels(get(lhs))) >= 3))
 
   for (idx in seq_along(rhs))

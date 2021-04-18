@@ -2,21 +2,22 @@
 % Please edit documentation in R/pomcheck.R
 \name{pomcheck}
 \alias{pomcheck}
-\title{Title}
+\title{Graphical check for proportional odds assumption}
 \usage{
-pomcheck(dat, f)
+pomcheck(x, ...)
 }
 \arguments{
-\item{dat}{data frame containing the variables in the formula}
+\item{x}{an object}
 
-\item{f}{an object of class formula}
+\item{...}{additional arguments}
 }
 \value{
 None
 }
 \description{
-Title
+Graphical check for proportional odds assumption
 }
 \examples{
-pomcheck(iris, Species ~ Sepal.Length)
+pomcheck(Species ~ Sepal.Length, iris)
+pomcheck(x="Species", y="Sepal.Length", iris)
 }
