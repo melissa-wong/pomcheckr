@@ -17,9 +17,10 @@ Suggests:
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Imports: 
-  dplyr,
-  tidyr,
-  ggplot2,
-  assertthat,
-  stats,
-  rlang
+    dplyr,
+    tidyr,
+    ggplot2,
+    assertthat,
+    stats,
+    rlang,
+    magrittr

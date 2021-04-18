@@ -4,14 +4,19 @@
 \alias{pomcheck}
 \title{Title}
 \usage{
-pomcheck(df, f)
+pomcheck(dat, f)
 }
 \arguments{
-\item{f}{}
+\item{dat}{data frame containing the variables in the formula}
+
+\item{f}{an object of class formula}
 }
 \value{
-
+None
 }
 \description{
 Title
+}
+\examples{
+pomcheck(iris, Species ~ Sepal.Length)
 }

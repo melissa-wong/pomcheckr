@@ -1,16 +1,19 @@
 #' Title
 #'
-#' @param df
-#' @param f
+#' @param dat data frame containing the variables in the formula
+#' @param f an object of class formula
 #'
-#' @return
+#' @return None
 #' @export
 #'
 #' @importFrom rlang .data
 #'
 #' @examples
+#' pomcheck(iris, Species ~ Sepal.Length)
 pomcheck <- function(dat, f)
 {
+  assertthat::assert_that(is.data.frame(dat))
+  assertthat::assert_that(rlang::is_formula(f))
   t <- all.vars(f)
   lhs <- t[1]
   rhs <- t[-1]
@@ -18,7 +21,6 @@ pomcheck <- function(dat, f)
   assertthat::assert_that(with(dat, is.factor(get(lhs))))
   # Check t[1] has at least 3 levels
   assertthat::assert_that(with(dat, length(levels(get(lhs))) >= 3))
-
 
   for (idx in seq_along(rhs))
   {
@@ -45,26 +47,33 @@ pomcheck <- function(dat, f)
                p = stats::qlogis(ntotal/sum(n))) %>%
         dplyr::select(c(.data[[tmp]], nlhs, p)) %>%
         tidyr::pivot_wider(names_from = nlhs,
-                    names_prefix = "apply_>=",
+                    names_prefix = paste0(lhs,"_>="),
                     values_from=p)
     )
 
     # Get number of columns
     nc <- ncol(res1)
-    # Now get differences between columns
-    print(
-      res2 <- cbind(res1[,1], res1[,3:nc] - res1[,2:(nc-1)])
-    )
-    res2[,2] <- 0
 
-    print(
-      res2 %>%
-        tidyr::pivot_longer(-c(.data[[tmp]]), names_to="label") %>%
-        ggplot2::ggplot() +
-        ggplot2::geom_point(mapping=ggplot2::aes(x=.data$value,
-                                                 y=.data[[tmp]],
-                               color=.data$label)) +
-        ggplot2::labs(y=rhs[idx])
-    )
+    # Check that at least two columns are finite
+    if(any(rowSums(sapply(res1[,2:nc], is.finite)) >= 2))
+    {
+      # Now get differences between columns
+      res2 <- cbind(res1[,1], res1[,3:nc] - res1[,2:(nc-1)])
+
+      print(
+        res2 %>%
+          tidyr::pivot_longer(-c(.data[[tmp]]), names_to="label") %>%
+          dplyr::filter(is.finite(value)) %>%
+          ggplot2::ggplot() +
+          ggplot2::geom_point(mapping=ggplot2::aes(x=.data$value,
+                                                   y=.data[[tmp]],
+                                                   color=.data$label)) +
+          ggplot2::labs(y=rhs[idx])
+      )
+    }
+    else
+    {
+      message("Insufficient data.")
+    }
   }
 }
