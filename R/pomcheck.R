@@ -9,7 +9,7 @@
 #' @importFrom rlang .data
 #'
 #' @examples
-pomcheck <- function(df, f)
+pomcheck <- function(dat, f)
 {
   t <- all.vars(f)
   lhs <- t[1]
@@ -17,7 +17,7 @@ pomcheck <- function(df, f)
   # Check t[1] is a factor
   assertthat::assert_that(with(dat, is.factor(get(lhs))))
   # Check t[1] has at least 3 levels
-  assertthat::assert_that(length(levels(get(lhs))) < 3)
+  assertthat::assert_that(with(dat, length(levels(get(lhs))) >= 3))
 
 
   for (idx in seq_along(rhs))
@@ -38,13 +38,13 @@ pomcheck <- function(df, f)
 
     print(
       res1 <- tmpdat %>%
-        dplyr::mutate(napply = as.numeric(apply)) %>%
-        dplyr::group_by(.data[[tmp]], napply) %>%
-        dplyr::summarize(n=n(), .groups = "drop_last") %>%
+        dplyr::mutate(nlhs = as.numeric(.data[[lhs]])) %>%
+        dplyr::group_by(.data[[tmp]], nlhs) %>%
+        dplyr::summarize(n=dplyr::n(), .groups = "drop_last") %>%
         dplyr::mutate(ntotal = rev(cumsum(rev(n))),
                p = stats::qlogis(ntotal/sum(n))) %>%
-        dplyr::select(c(.data[[tmp]], napply, p)) %>%
-        tidyr::pivot_wider(names_from = napply,
+        dplyr::select(c(.data[[tmp]], nlhs, p)) %>%
+        tidyr::pivot_wider(names_from = nlhs,
                     names_prefix = "apply_>=",
                     values_from=p)
     )
