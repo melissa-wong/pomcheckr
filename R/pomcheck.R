@@ -1,3 +1,14 @@
+#' Title
+#'
+#' @param df
+#' @param f
+#'
+#' @return
+#' @export
+#'
+#' @importFrom rlang .data
+#'
+#' @examples
 pomcheck <- function(df, f)
 {
   t <- all.vars(f)
@@ -17,23 +28,23 @@ pomcheck <- function(df, f)
     if (with(dat, is.numeric(get(tmp))))
     {
       # split into quantiles
-      q <- quantile(with(dat, get(tmp)))
+      q <- stats::quantile(with(dat, get(tmp)))
       tmpdat <- dat %>%
-        mutate(category=cut(.data[[tmp]],
-                            breaks=quantile(.data[[tmp]]),
+        dplyr::mutate(category=cut(.data[[tmp]],
+                            breaks=stats::quantile(.data[[tmp]]),
                             include.lowest = TRUE))
       tmp <- "category"
     }
 
     print(
       res1 <- tmpdat %>%
-        mutate(napply = as.numeric(apply)) %>%
-        group_by(.data[[tmp]], napply) %>%
-        summarize(n=n(), .groups = "drop_last") %>%
-        mutate(ntotal = rev(cumsum(rev(n))),
-               p = qlogis(ntotal/sum(n))) %>%
-        select(c(.data[[tmp]], napply, p)) %>%
-        pivot_wider(names_from = napply,
+        dplyr::mutate(napply = as.numeric(apply)) %>%
+        dplyr::group_by(.data[[tmp]], napply) %>%
+        dplyr::summarize(n=n(), .groups = "drop_last") %>%
+        dplyr::mutate(ntotal = rev(cumsum(rev(n))),
+               p = stats::qlogis(ntotal/sum(n))) %>%
+        dplyr::select(c(.data[[tmp]], napply, p)) %>%
+        tidyr::pivot_wider(names_from = napply,
                     names_prefix = "apply_>=",
                     values_from=p)
     )
@@ -48,11 +59,12 @@ pomcheck <- function(df, f)
 
     print(
       res2 %>%
-        pivot_longer(-c(.data[[tmp]]), names_to="label") %>%
-        ggplot() +
-        geom_point(mapping=aes(x=value, y=.data[[tmp]],
-                               color=label)) +
-        labs(y=rhs[idx])
+        tidyr::pivot_longer(-c(.data[[tmp]]), names_to="label") %>%
+        ggplot2::ggplot() +
+        ggplot2::geom_point(mapping=ggplot2::aes(x=.data$value,
+                                                 y=.data[[tmp]],
+                               color=.data$label)) +
+        ggplot2::labs(y=rhs[idx])
     )
   }
 }
