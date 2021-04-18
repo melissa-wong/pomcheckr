@@ -4,15 +4,10 @@ pomcheck <- function(df, f)
   lhs <- t[1]
   rhs <- t[-1]
   # Check t[1] is a factor
-  if (!with(dat, is.factor(get(lhs))))
-  {
-    #raise error
-  }
+  assertthat::assert_that(with(dat, is.factor(get(lhs))))
   # Check t[1] has at least 3 levels
-  if (length(levels(get(lhs))) < 3)
-  {
-    #raise error
-  }
+  assertthat::assert_that(length(levels(get(lhs))) < 3)
+
 
   for (idx in seq_along(rhs))
   {
