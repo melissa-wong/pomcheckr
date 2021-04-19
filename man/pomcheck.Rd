@@ -2,22 +2,43 @@
 % Please edit documentation in R/pomcheck.R
 \name{pomcheck}
 \alias{pomcheck}
+\alias{pomcheck.default}
+\alias{pomcheck.formula}
 \title{Graphical check for proportional odds assumption}
 \usage{
-pomcheck(x, ...)
+pomcheck(object, ...)
+
+\method{pomcheck}{default}(object, x, dat, ...)
+
+\method{pomcheck}{formula}(formula, dat, ...)
 }
 \arguments{
-\item{x}{an object}
+\item{object}{character string for response}
 
-\item{...}{additional arguments}
+\item{\dots}{additional arguments}
+
+\item{x}{vector of character string(s) for explanatory variable(s)}
+
+\item{dat}{data frame containing the variables in the formula}
+
+\item{formula}{A formula of the form y ~ x1 + x2 + ...}
 }
 \value{
 None
 }
 \description{
-Graphical check for proportional odds assumption
+Generates the plots described in \url{https://stats.idre.ucla.edu/r/dae/ordinal-logistic-regression/}
+for checking if the proportional odds assumption holds for a cumulative logit model.
 }
+\section{Methods (by class)}{
+\itemize{
+\item \code{default}: default
+
+\item \code{formula}: Graphical check given formula specification
+}}
+
 \examples{
 pomcheck(Species ~ Sepal.Length, iris)
-pomcheck(x="Species", y="Sepal.Length", iris)
+pomcheck(object="Species", x="Sepal.Length", iris)
+pomcheck(object="Species", x=c("Sepal.Length", "Sepal.Width"), iris)
 }

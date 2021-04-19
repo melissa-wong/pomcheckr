@@ -1,7 +1,10 @@
 #' Graphical check for proportional odds assumption
 #'
-#' @param x an object
-#' @param ... additional arguments
+#' Generates the plots described in \url{https://stats.idre.ucla.edu/r/dae/ordinal-logistic-regression/}
+#' for checking if the proportional odds assumption holds for a cumulative logit model.
+#'
+#' @param object an object
+#' @param \dots additional arguments
 #'
 #' @return None
 #'
@@ -10,36 +13,24 @@
 #' @export
 #' @examples
 #' pomcheck(Species ~ Sepal.Length, iris)
-#' pomcheck(x="Species", y="Sepal.Length", iris)
-pomcheck <- function(x,...) UseMethod("pomcheck")
+#' pomcheck(object="Species", x="Sepal.Length", iris)
+#' pomcheck(object="Species", x=c("Sepal.Length", "Sepal.Width"), iris)
+pomcheck <- function(object,...) UseMethod("pomcheck")
 
-#' @param formula A formula of the form y ~ x1 + x2 + ...
+#' @param object character string for response
+#' @param x vector of character string(s) for explanatory variable(s)
+#' @param dat data frame containing the variables y and x
 #'
-#' @param dat data frame containing the variables in the formula
-#'
+#' @describeIn pomcheck default
 #' @export
-pomcheck.formula <- function(formula, dat)
+pomcheck.default  <- function(object, x, dat,...)
 {
-  #assertthat::assert_that(rlang::is_formula(x))
-  t <- all.vars(formula)
-  x <- t[1]
-  y <- t[-1]
-  pomcheck.default(x, y, dat)
-}
-
-#' @param lhs character string for response
-#'
-#' @param rhs character string for explanatory variables
-#' @param dat data frame containing the variables lhs and rhs
-#'
-#' @export
-pomcheck.default  <- function(x, y, dat)
-{
-  lhs <- x
-  rhs <- y
+  lhs <- object
+  rhs <- x
   assertthat::assert_that(is.data.frame(dat))
   assertthat::assert_that(is.character(lhs))
   assertthat::assert_that(is.character(rhs))
+  assertthat::assert_that(length(lhs)==1)
   # assertthat::assert_that(rlang::is_formula(f))
   # t <- all.vars(f)
   # lhs <- t[1]
@@ -68,14 +59,14 @@ pomcheck.default  <- function(x, y, dat)
     print(
       res1 <- tmpdat %>%
         dplyr::mutate(nlhs = as.numeric(.data[[lhs]])) %>%
-        dplyr::group_by(.data[[tmp]], nlhs) %>%
+        dplyr::group_by(.data[[tmp]], .data$nlhs) %>%
         dplyr::summarize(n=dplyr::n(), .groups = "drop_last") %>%
-        dplyr::mutate(ntotal = rev(cumsum(rev(n))),
-               p = stats::qlogis(ntotal/sum(n))) %>%
-        dplyr::select(c(.data[[tmp]], nlhs, p)) %>%
-        tidyr::pivot_wider(names_from = nlhs,
+        dplyr::mutate(ntotal = rev(cumsum(rev(.data$n))),
+               p = stats::qlogis(.data$ntotal/sum(.data$n))) %>%
+        dplyr::select(c(.data[[tmp]], .data$nlhs, .data$p)) %>%
+        tidyr::pivot_wider(names_from = .data$nlhs,
                     names_prefix = paste0(lhs,"_>="),
-                    values_from=p)
+                    values_from=.data$p)
     )
 
     # Get number of columns
@@ -90,7 +81,7 @@ pomcheck.default  <- function(x, y, dat)
       print(
         res2 %>%
           tidyr::pivot_longer(-c(.data[[tmp]]), names_to="label") %>%
-          dplyr::filter(is.finite(value)) %>%
+          dplyr::filter(is.finite(.data$value)) %>%
           ggplot2::ggplot() +
           ggplot2::geom_point(mapping=ggplot2::aes(x=.data$value,
                                                    y=.data[[tmp]],
@@ -103,4 +94,18 @@ pomcheck.default  <- function(x, y, dat)
       message("Insufficient data.")
     }
   }
+}
+
+#' @param formula A formula of the form y ~ x1 + x2 + ...
+#' @param dat data frame containing the variables in the formula
+#'
+#' @describeIn pomcheck Graphical check given formula specification
+#' @export
+pomcheck.formula <- function(formula, dat,...)
+{
+  #assertthat::assert_that(rlang::is_formula(x))
+  t <- all.vars(formula)
+  x <- t[1]
+  y <- t[-1]
+  pomcheck.default(x, y, dat)
 }
