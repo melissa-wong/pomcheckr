@@ -86,12 +86,13 @@ pomcheck.default  <- function(object, x, dat,...)
           ggplot2::geom_point(mapping=ggplot2::aes(x=.data$value,
                                                    y=.data[[tmp]],
                                                    color=.data$label)) +
-          ggplot2::labs(y=rhs[idx])
+          ggplot2::labs(y=rhs[idx]) +
+          ggplot2::xlim(NA, 0)
       )
     }
     else
     {
-      message("Insufficient data.")
+      message("Unable to generate plots. Counts must be > 0 in at least 3 categories in order to calculate proportional odds.")
     }
   }
 }
