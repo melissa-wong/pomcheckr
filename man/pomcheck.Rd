@@ -8,37 +8,41 @@
 \usage{
 pomcheck(object, ...)
 
-\method{pomcheck}{default}(object, x, dat, ...)
+\method{pomcheck}{default}(object, x, data, ...)
 
-\method{pomcheck}{formula}(formula, dat, ...)
+\method{pomcheck}{formula}(formula, data, ...)
 }
 \arguments{
 \item{object}{character string for response}
 
-\item{\dots}{additional arguments}
+\item{\dots}{currently unused}
 
 \item{x}{vector of character string(s) for explanatory variable(s)}
 
-\item{dat}{data frame containing the variables in the formula}
+\item{data}{data frame containing the variables}
 
-\item{formula}{A formula of the form y ~ x1 + x2 + ...}
+\item{formula}{formula of the form y ~ x1 + x2 + ...}
 }
 \value{
-None
+an object of class 'pomcheck'
 }
 \description{
-Generates the plots described in \url{https://stats.idre.ucla.edu/r/dae/ordinal-logistic-regression/}
+Implements the method described in \url{https://stats.idre.ucla.edu/r/dae/ordinal-logistic-regression/}
 for checking if the proportional odds assumption holds for a cumulative logit model.
 }
 \section{Methods (by class)}{
 \itemize{
 \item \code{default}: default
 
-\item \code{formula}: Graphical check given formula specification
+\item \code{formula}: supports formula specification
 }}
 
 \examples{
 pomcheck(Species ~ Sepal.Length, iris)
+pomcheck(Species ~ Sepal.Length + Sepal.Width, iris)
 pomcheck(object="Species", x="Sepal.Length", iris)
 pomcheck(object="Species", x=c("Sepal.Length", "Sepal.Width"), iris)
+}
+\seealso{
+\code{\link[=plot.pomcheck]{plot.pomcheck()}}
 }

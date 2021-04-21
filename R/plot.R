@@ -1,12 +1,19 @@
-#' Title
+#' Graphical check for proportional odds assumption
 #'
-#' @param obj
+#'Generates the plots described in \url{https://stats.idre.ucla.edu/r/dae/ordinal-logistic-regression/}
+#' for checking if the proportional odds assumption holds for a cumulative logit model.
+#'
+#' @param x a pomcheck object
+#' @param \dots currently unused
 #'
 #' @return
 #' @export
 #'
+#' @seealso [pomcheck::pomcheck()]
+#'
 #' @examples
-plot.pomcheckobj <- function(x, ...)
+#' plot(pomcheck(Species ~ Sepal.Width, iris))
+plot.pomcheck <- function(x, ...)
 {
   for (idx in seq_along(x))
   {
