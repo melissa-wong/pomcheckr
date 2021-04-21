@@ -40,6 +40,10 @@ pomcheck.default  <- function(object, x, dat,...)
   # Check lhs has at least 3 levels
   assertthat::assert_that(with(dat, length(levels(get(lhs))) >= 3))
 
+  # Create empty list to hold results
+  result <- vector(mode="list", length=length(rhs))
+  class(result) <- append("pomcheckobj", "list")
+
   for (idx in seq_along(rhs))
   {
     tmp <- rhs[idx]
@@ -52,49 +56,55 @@ pomcheck.default  <- function(object, x, dat,...)
       tmpdat <- dat %>%
         dplyr::mutate(category=cut(.data[[tmp]],
                             breaks=stats::quantile(.data[[tmp]]),
-                            include.lowest = TRUE))
-      tmp <- "category"
+                            include.lowest = TRUE)) %>%
+        dplyr::select(-dplyr::sym(tmp)) %>%
+        dplyr::rename(!! tmp := category)
+      #tmp <- "category"
     }
 
-    print(
-      res1 <- tmpdat %>%
-        dplyr::mutate(nlhs = as.numeric(.data[[lhs]])) %>%
-        dplyr::group_by(.data[[tmp]], .data$nlhs) %>%
-        dplyr::summarize(n=dplyr::n(), .groups = "drop_last") %>%
-        dplyr::mutate(ntotal = rev(cumsum(rev(.data$n))),
-               p = stats::qlogis(.data$ntotal/sum(.data$n))) %>%
-        dplyr::select(c(.data[[tmp]], .data$nlhs, .data$p)) %>%
-        tidyr::pivot_wider(names_from = .data$nlhs,
-                    names_prefix = paste0(lhs,"_>="),
-                    values_from=.data$p)
-    )
+    res1 <- tmpdat %>%
+      dplyr::mutate(nlhs = as.numeric(.data[[lhs]])) %>%
+      dplyr::group_by(.data[[tmp]], .data$nlhs) %>%
+      dplyr::summarize(n=dplyr::n(), .groups = "drop_last") %>%
+      dplyr::mutate(ntotal = rev(cumsum(rev(.data$n))),
+                    p = stats::qlogis(.data$ntotal/sum(.data$n))) %>%
+      dplyr::select(c(.data[[tmp]], .data$nlhs, .data$p)) %>%
+      tidyr::pivot_wider(names_from = .data$nlhs,
+                         names_prefix = paste0(lhs,"_>="),
+                         values_from=.data$p)
 
-    # Get number of columns
-    nc <- ncol(res1)
+    # Add to list to return to user
+    attr(res1, "variable") <- rhs[idx]
+    result[[idx]] = res1
 
-    # Check that at least two columns are finite
-    if(any(rowSums(sapply(res1[,2:nc], is.finite)) >= 2))
-    {
-      # Now get differences between columns
-      res2 <- cbind(res1[,1], res1[,3:nc] - res1[,2:(nc-1)])
-
-      print(
-        res2 %>%
-          tidyr::pivot_longer(-c(.data[[tmp]]), names_to="label") %>%
-          dplyr::filter(is.finite(.data$value)) %>%
-          ggplot2::ggplot() +
-          ggplot2::geom_point(mapping=ggplot2::aes(x=.data$value,
-                                                   y=.data[[tmp]],
-                                                   color=.data$label)) +
-          ggplot2::labs(y=rhs[idx]) +
-          ggplot2::xlim(NA, 0)
-      )
-    }
-    else
-    {
-      message("Unable to generate plots. Counts must be > 0 in at least 3 categories in order to calculate proportional odds.")
-    }
+    # # Get number of columns
+    # nc <- ncol(res1)
+    #
+    # # Check that at least two columns are finite
+    # if(any(rowSums(sapply(res1[,2:nc], is.finite)) >= 2))
+    # {
+    #   # Now get differences between columns
+    #   res2 <- cbind(res1[,1], res1[,3:nc] - res1[,2:(nc-1)])
+    #
+    #   print(
+    #     res2 %>%
+    #       tidyr::pivot_longer(-c(.data[[tmp]]), names_to="label") %>%
+    #       dplyr::filter(is.finite(.data$value)) %>%
+    #       ggplot2::ggplot() +
+    #       ggplot2::geom_point(mapping=ggplot2::aes(x=.data$value,
+    #                                                y=.data[[tmp]],
+    #                                                color=.data$label)) +
+    #       ggplot2::labs(y=rhs[idx]) +
+    #       ggplot2::xlim(NA, 0)
+    #   )
+    # }
+    # else
+    # {
+    #   message("Unable to generate plots. Counts must be > 0 in at least 3 categories in order to calculate proportional odds.")
+    # }
   }
+
+  return(result)
 }
 
 #' @param formula A formula of the form y ~ x1 + x2 + ...
