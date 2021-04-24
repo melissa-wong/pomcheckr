@@ -44,5 +44,5 @@ pomcheck(object="Species", x="Sepal.Length", iris)
 pomcheck(object="Species", x=c("Sepal.Length", "Sepal.Width"), iris)
 }
 \seealso{
-\code{\link[=plot.pomcheck]{plot.pomcheck()}}
+\code{\link{plot.pomcheck}}
 }

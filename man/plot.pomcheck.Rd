@@ -4,15 +4,17 @@
 \alias{plot.pomcheck}
 \title{Graphical check for proportional odds assumption}
 \usage{
-\method{plot}{pomcheck}(x, ...)
+\method{plot}{pomcheck}(x, legend.position = "none", ...)
 }
 \arguments{
 \item{x}{a pomcheck object}
 
+\item{legend.position}{the position of legends ("none", "left", "right", "bottom", "top", or two-element numeric vector)}
+
 \item{\dots}{currently unused}
 }
 \value{
-
+None
 }
 \description{
 Generates the plots described in \url{https://stats.idre.ucla.edu/r/dae/ordinal-logistic-regression/}
@@ -22,5 +24,5 @@ for checking if the proportional odds assumption holds for a cumulative logit mo
 plot(pomcheck(Species ~ Sepal.Width, iris))
 }
 \seealso{
-\code{\link[pomcheck:pomcheck]{pomcheck::pomcheck()}}
+\code{\link{pomcheck}}
 }

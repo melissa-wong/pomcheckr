@@ -4,16 +4,17 @@
 #' for checking if the proportional odds assumption holds for a cumulative logit model.
 #'
 #' @param x a pomcheck object
+#' @param legend.position the position of legends ("none", "left", "right", "bottom", "top", or two-element numeric vector)
 #' @param \dots currently unused
 #'
-#' @return
+#' @return None
 #' @export
 #'
-#' @seealso [pomcheck::pomcheck()]
+#' @seealso \code{\link{pomcheck}}
 #'
 #' @examples
 #' plot(pomcheck(Species ~ Sepal.Width, iris))
-plot.pomcheck <- function(x, ...)
+plot.pomcheck <- function(x, legend.position = "none", ...)
 {
   for (idx in seq_along(x))
   {
@@ -38,7 +39,11 @@ plot.pomcheck <- function(x, ...)
                                                    y=.data[[tmp]],
                                                    color=.data$label)) +
           ggplot2::labs(y=tmp) +
-          ggplot2::xlim(NA, 0)
+          ggplot2::scale_colour_discrete(labels = function(x) stringr::str_wrap(x, width = 10,
+                                                                                 whitespace_only=FALSE)) +
+          ggplot2::scale_y_discrete(labels = function(x) stringr::str_wrap(x, width = 10)) +
+          ggplot2::xlim(NA, 0) +
+          ggplot2::theme(legend.position = legend.position)
       )
     }
     else

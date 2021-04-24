@@ -1,0 +1,61 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# pomcheckr
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+The goal of pomcheckr is to mplements the method described in \url{https://stats.idre.ucla.edu/r/dae/ordinal-logistic-regression/} for checking if the proportional odds assumption holds for a cumulative logit model.
+
+## Installation
+
+<!--You can install the released version of pomcheckr from [CRAN](https://CRAN.R-project.org) with:
+
+``` r
+install.packages("pomcheckr")
+```
+-->
+
+You can install the development version from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("melissa-wong/pomcheckr")
+```
+## Example
+
+This is an example using formula syntax:
+
+```{r example1}
+library(pomcheckr)
+plot(pomcheck(Species ~ Sepal.Length + Sepal.Width, iris))
+```
+
+The following syntax is equivalent:
+
+```{r example2}
+plot(pomcheck("Species", c("Sepal.Length", "Sepal.Width"),
+              iris))
+```
+
+And if you want to examine the `pomcheck` object underlying the plots:
+
+```{r example3}
+p <- pomcheck(Species ~ Sepal.Length + Sepal.Width, iris)
+summary(p)
+p
+```
+

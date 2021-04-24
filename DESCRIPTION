@@ -23,4 +23,5 @@ Imports:
     assertthat,
     stats,
     rlang,
-    magrittr
+    magrittr,
+    stringr

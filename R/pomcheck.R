@@ -11,7 +11,7 @@
 #' @importFrom rlang .data
 #' @importFrom rlang :=
 #'
-#' @seealso [plot.pomcheck()]
+#' @seealso \code{\link{plot.pomcheck}}
 #'
 #' @export
 #' @examples
