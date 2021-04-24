@@ -16,6 +16,8 @@
 #' plot(pomcheck(Species ~ Sepal.Width, iris))
 plot.pomcheck <- function(x, legend.position = "none", ...)
 {
+  assertthat::assert_that(inherits(x, "pomcheck"),
+                          msg = "x must be a pomcheck object")
   for (idx in seq_along(x))
   {
     res1 <- x[[idx]]
@@ -48,7 +50,9 @@ plot.pomcheck <- function(x, legend.position = "none", ...)
     }
     else
     {
-      message("Unable to generate plots. Counts must be > 0 in at least 3 categories in order to calculate proportional odds.")
+      message(paste0("Unable to generate plot for ", tmp,
+                     ". Counts must be > 0 in at least 3 categories in
+                     order to calculate proportional odds."))
     }
   }
 }
