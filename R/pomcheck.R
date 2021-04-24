@@ -36,9 +36,11 @@ pomcheck.default  <- function(object, x, data,...)
   assertthat::assert_that(is.character(rhs))
   assertthat::assert_that(length(lhs)==1)
   # Check lhs is a factor
-  assertthat::assert_that(with(data, is.factor(get(lhs))))
+  assertthat::assert_that(with(data, is.factor(get(lhs))),
+                          msg="object must be a factor")
   # Check lhs has at least 3 levels
-  assertthat::assert_that(with(data, length(levels(get(lhs))) >= 3))
+  assertthat::assert_that(with(data, length(levels(get(lhs))) >= 3),
+                          msg="object must have at least three levels")
 
   # Create empty list to hold results
   result <- vector(mode="list", length=length(rhs))
