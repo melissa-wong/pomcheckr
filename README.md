@@ -28,27 +28,34 @@ You can install the development version from
 devtools::install_github("melissa-wong/pomcheckr")
 ```
 
-## Example
+## Examples
 
-This is an example using formula syntax:
+### Default Syntax
+
+The following example uses the default syntax:
 
 ``` r
 library(pomcheckr)
-plot(pomcheck(Species ~ Sepal.Length + Sepal.Width, iris))
-```
-
-<img src="man/figures/README-example1-1.png" width="100%" /><img src="man/figures/README-example1-2.png" width="100%" />
-
-The following syntax is equivalent:
-
-``` r
 plot(pomcheck("Species", c("Sepal.Length", "Sepal.Width"),
               iris))
 ```
 
-<img src="man/figures/README-example2-1.png" width="100%" /><img src="man/figures/README-example2-2.png" width="100%" />
+<img src="man/figures/README-example2-1.png" width="50%" /><img src="man/figures/README-example2-2.png" width="50%" />
 
-And if you want to examine the `pomcheck` object underlying the plots:
+### Formula Syntax
+
+This is the equivalent example using formula syntax:
+
+``` r
+plot(pomcheck(Species ~ Sepal.Length + Sepal.Width, iris))
+```
+
+<img src="man/figures/README-example1-1.png" width="50%" /><img src="man/figures/README-example1-2.png" width="50%" />
+
+### Examine Data
+
+This example shows how to access and view the `pomcheck` object
+underlying the plots:
 
 ``` r
 p <- pomcheck(Species ~ Sepal.Length + Sepal.Width, iris)
@@ -56,7 +63,10 @@ summary(p)
 #>      Length Class      Mode
 #> [1,] 4      grouped_df list
 #> [2,] 4      grouped_df list
-p
+```
+
+``` r
+print(p)
 #> [[1]]
 #> # A tibble: 4 x 4
 #> # Groups:   Sepal.Length [4]

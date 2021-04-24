@@ -9,7 +9,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
-  out.width = "100%"
+  out.width = "50%"
 )
 ```
 
@@ -35,27 +35,35 @@ You can install the development version from [GitHub](https://github.com/) with:
 # install.packages("devtools")
 devtools::install_github("melissa-wong/pomcheckr")
 ```
-## Example
+## Examples
 
-This is an example using formula syntax:
+### Default Syntax
 
-```{r example1}
-library(pomcheckr)
-plot(pomcheck(Species ~ Sepal.Length + Sepal.Width, iris))
-```
-
-The following syntax is equivalent:
+The following example uses the default syntax:
 
 ```{r example2}
+library(pomcheckr)
 plot(pomcheck("Species", c("Sepal.Length", "Sepal.Width"),
               iris))
 ```
 
-And if you want to examine the `pomcheck` object underlying the plots:
+### Formula Syntax
+
+This is the equivalent example using formula syntax:
+
+```{r example1}
+plot(pomcheck(Species ~ Sepal.Length + Sepal.Width, iris))
+```
+
+### Examine Data
+
+This example shows how to access and view the `pomcheck` object underlying the plots:
 
 ```{r example3}
 p <- pomcheck(Species ~ Sepal.Length + Sepal.Width, iris)
 summary(p)
-p
+```
+```{r}
+print(p)
 ```
 
