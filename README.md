@@ -7,10 +7,10 @@
 
 <!-- badges: end -->
 
-The goal of pomcheckr is to implement the method described by \[UCLA
-Statistical Consulting\]
-(<https://stats.idre.ucla.edu/r/dae/ordinal-logistic-regression/>) for
-checking if the proportional odds assumption holds for a cumulative
+The goal of pomcheckr is to implement the method described by [UCLA
+Statistical
+Consulting](https://stats.idre.ucla.edu/r/dae/ordinal-logistic-regression/)
+for checking if the proportional odds assumption holds for a cumulative
 logit model.
 
 ## Installation
