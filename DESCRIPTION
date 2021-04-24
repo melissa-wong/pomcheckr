@@ -1,5 +1,5 @@
 Package: pomcheckr
-Title: What the Package Does (One Line, Title Case)
+Title: Graphical Check for Proportional Odds Assumption
 Version: 0.1.0
 Authors@R: 
     person(given = "Melissa",
@@ -7,10 +7,12 @@ Authors@R:
            role = c("aut", "cre"),
            email = "melissa.wong.stats@gmail.com",
            comment = c(ORCID = "0000-0002-2973-6279"))
-Description: What the package does (one paragraph).
+Description: Implements the method described at the UCLA Statistical
+    Consulting site <https://stats.idre.ucla.edu/r/dae/ordinal-logistic-regression/>
+    for checking if the proportional odds assumption holds for a 
+    cumulative logit model.
 License: MIT + file LICENSE
 Encoding: UTF-8
-LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Suggests: 
