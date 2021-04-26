@@ -17,12 +17,12 @@ logit model.
 
 ## Installation
 
-<!--You can install the released version of pomcheckr from [CRAN](https://CRAN.R-project.org) with:
+You can install the released version of pomcheckr from
+[CRAN](https://CRAN.R-project.org) with:
 
 ``` r
 install.packages("pomcheckr")
 ```
--->
 
 You can install the development version from
 [GitHub](https://github.com/) with:
