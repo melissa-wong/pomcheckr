@@ -1,6 +1,6 @@
 Package: pomcheckr
 Title: Graphical Check for Proportional Odds Assumption
-Version: 0.1.0.9000
+Version: 0.1.1.9000
 Authors@R: 
     person(given = "Melissa",
            family = "Wong",

@@ -7,6 +7,7 @@
 
 [![Travis build
 status](https://travis-ci.com/melissa-wong/pomcheckr.svg?branch=main)](https://travis-ci.com/melissa-wong/pomcheckr)
+[![](https://cranlogs.r-pkg.org/badges/grand-total/pomcheckr)](https://cran.rstudio.com/web/packages/pomcheckr/index.html)
 <!-- badges: end -->
 
 The goal of pomcheckr is to implement the method described by [UCLA
