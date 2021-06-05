@@ -40,7 +40,7 @@ plot.pomcheck <- function(x, legend.position = "none", ...)
           ggplot2::geom_point(mapping=ggplot2::aes(x=.data$value,
                                                    y=.data[[tmp]],
                                                    color=.data$label)) +
-          ggplot2::labs(y=tmp) +
+          ggplot2::labs(y=tmp, x="logit") +
           ggplot2::scale_colour_discrete(labels = function(x) stringr::str_wrap(x, width = 10,
                                                                                  whitespace_only=FALSE)) +
           ggplot2::scale_y_discrete(labels = function(x) stringr::str_wrap(x, width = 10)) +
