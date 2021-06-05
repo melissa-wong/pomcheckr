@@ -30,7 +30,7 @@ data(ologit)
 ```{r}
 head(ologit)
 ```
-`ologit` is a synthentic data set consisting of the following:
+`ologit` is a synthetic data set consisting of the following:
 
 * apply - indicates how likely a student is to apply to graduate school
 
