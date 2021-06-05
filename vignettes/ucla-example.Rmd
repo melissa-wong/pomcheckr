@@ -1,0 +1,81 @@
+---
+title: "UCLA Statistical Consulting Example"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{UCLA Statistical Consulting Example}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+This vignette replicates the [ordinal logistic regression example](https://stats.idre.ucla.edu/r/dae/ordinal-logistic-regression/) done by the [UCLA Statistical Consulting Group](https://stats.idre.ucla.edu/). It demonstrates how to use the `pomcheckr` package to check if the proportional odds assumption holds.
+
+## Load packages and data
+
+```{r setup}
+library(pomcheckr)
+library(ggplot2)
+data(ologit)
+```
+
+## Description of Data
+
+```{r}
+head(ologit)
+```
+`ologit` is a synthentic data set consisting of the following:
+
+* apply - indicates how likely a student is to apply to graduate school
+
+* pared - 1 if at least one parent has a graduate degree, 0 otherwise
+
+* public - 1 if the undergraduate institution if public, 0 otherwise
+
+* gpa - the student's grade point average
+
+## Descriptive Statistics 
+
+Some of the descriptive statistics from the example are repeated below.
+
+```{r desc}
+## one at a time, table apply, pared, and public
+lapply(ologit[, c("apply", "pared", "public")], table)
+```
+
+```{r xtabs}
+## three way cross tabs (xtabs) and flatten the table
+ftable(xtabs(~ public + apply + pared, data = ologit))
+```
+
+
+```{r out.width="50%"}
+ggplot(ologit, aes(x = apply, y = gpa)) +
+  geom_boxplot() +
+  geom_jitter(size=0.1, alpha = .5) +
+  facet_grid(pared ~ public, margins = TRUE) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
+```
+
+## Analysis
+
+The [source page](https://stats.idre.ucla.edu/r/dae/ordinal-logistic-regression/) describes various analysis methods that one might consider and what the limitations are with respect to this data set. Since the outcome `apply` is an ordered, categorical variable an ordered logistic (aka cumulative logit) model is an appropriate choice.
+
+### Proportional Odds Assumption
+
+A key assumption of an ordinal logistic regression is that the odds of adjacent categories are proportional (i.e., the slope coefficients are the same). The score test is sometimes used to test this assumption, but it tends to be conservative and rejects the null more often than it should.  The [source page](https://stats.idre.ucla.edu/r/dae/ordinal-logistic-regression/) illustrates a graphical method for checking this assumption, and `pomcheckr` will automatically generate the necessary plots.
+
+```{r}
+plot(pomcheck(apply ~ pared + public + gpa, data=ologit))
+```
+
+The basic idea is a series of binary logistic regressions without the parallel slopes assumption are run on the response against the predictors.  Then we check for equality of the slope coefficients across levels of the predictor (or cutpoints if the predictor is continuous). See the [source page](https://stats.idre.ucla.edu/r/dae/ordinal-logistic-regression/) for further details.
+
+In the above plots, the slope coefficients are roughly equal for both `pared` and `gpa`.  However, the plot for `public` suggests the parallel slopes assumption is _not_ satisfied for that predictor.
+
